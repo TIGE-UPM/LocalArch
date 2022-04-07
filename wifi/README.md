@@ -111,54 +111,11 @@ We utilize the *nmcli* command, used for NetworK Management from the command lin
    ```
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!--
-### Linux
-
-We utilize the *iw* command, along with *hostapd* and *udhcpd*.
-1. Install *hostapd* and *udhcpd* if they aren't already installed:
-   ```sh
-   sudo apt install hostapd udhcpd
-   ```
-2. The system must support AP interface mode. This can be checked using the following command:
-   ```sh
-   iw list
-   ```
-3. Set up a virtual wireless interface:
-   ```sh
-   sudo iw phy DEVICES_PHYSICAL_NAME interface add NEW_INTERFACE_NAME type __ap
-   ```
-4. Set up the IP for the virtual interface. We have chosen 192.168.137.1 to be the default IP:
-   ```sh
-   sudo ifconfig NEW_INTERFACE_NAME 192.168.137.1 up
-   ```
-5. Now we must set up the hotspot. For that we must creat a file with *.conf* ending with the following characteristics:
-    ```
-      interface=NEW_INTERFACE_NAME
-      driver=nl80211
-      ssid=SSID_NAME
-      channel=7
-      hw_mode=g
-      wme_enabled=1
-      macaddr_acl=0
-      auth_algs=1
-      ignore_broadcast_ssid=0
-      wpa=3
-      wpa_passphrase=SSID_PASSWORD
-      wpa_key_mgmt=WPA-PSK
-      wpa_pairwise=TKIP
-      rsn_pairwise=CCMP
-    ```
-6. The we must run the following command to launch the hotspot with the specified settings:
-   ```sh
-   sudo hostapd CHOSEN_FILENAME.conf
-   ``` 
-<p align="right">(<a href="#top">back to top</a>)</p>
-   -->
 
 ### macOS
 
 We have not founf a way to launch a hotspot entirely from the command line, so the host (educator) will have to perform some guided steps in the GUI of the system preferences.
-1. First two commands must be run with admin privilages to create a new interface, we have chosen to set 192.168.137.1 as the IP address:
+1. First two commands must be run with admin privileges to create a new interface. We have chosen to set 192.168.137.1 as the IP address:
    ```sh
    sudo networksetup -createnetworkservice HOTSPOT_INTERFACE_NAME lo0
    sudo networksetup -setmanual HOTSPOT_INTERFACE_NAME 192.168.137.1 255.255.255.255
@@ -168,11 +125,10 @@ We have not founf a way to launch a hotspot entirely from the command line, so t
    sudo networksetup -createnetworkservice AdHoc lo0
    sudo networksetup -setmanual AdHoc 192.168.137.1 255.255.255.255
    ```
-2. Now we must open "System Preferences", then chose "Sharing" and then select "Internet Sharing":
-   <div align="center">
-   <img src="18.30.png" width="853" height="533">
-   <img src="18.34.png" width="723" height="526">
-   <div>
+2. Now we run the following command to open the "Internet Sharing" tab:
+   ```sh
+   open “x-apple.systempreferences:com.apple.preferences.sharing?Internet” 
+   ```
 3. Then we must chose the name of our new interface from the "Share your connection from:" dropdown menu, and then tick "Wi-Fi" from the "To computer using:" menu:
    <div align="center">
    <img src="53.01.png" width="723" height="526">
