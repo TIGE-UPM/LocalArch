@@ -1,0 +1,200 @@
+.App {
+	text-align: center;
+}
+
+.App-logo {
+	height: 40vmin;
+	pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.App-logo {
+		animation: App-logo-spin infinite 20s linear;
+	}
+}
+
+.App-header {
+	background-color: #282c34;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+	color: white;
+}
+
+.App-link {
+	color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* HOMEPAGE CSS*/
+
+/* ---------------------------------------     TOP NAVIGATION    -------------------------------------------- */
+
+/* Add a black background color to the top navigation */
+.topnav {
+	background-color: #1867b7;
+	overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+	float: right;
+	color: #f2f2f2;
+	text-align: center;
+	padding: 16px 20px;
+	text-decoration: none;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+	background-color: #ddd;
+	color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+	background-color: #0d3b6a;
+	color: white;
+}
+
+/* Add a color to the active/current link */
+.topnav a.qrcode {
+	float: left;
+}
+
+.topnav label.switch {
+	float: right;
+}
+
+/* ---------------------------------------     ON / OFF SWITCH      -------------------------------------------- */
+
+/* The switch - the box around the slider */
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+/* The slider */
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: 0.4s;
+	transition: 0.4s;
+}
+
+/* Slider not active*/
+.slider:before {
+	position: absolute;
+	content: "";
+	height: 26px;
+	width: 26px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: 0.4s;
+	transition: 0.4s;
+}
+
+/*Slider active*/
+input:checked + .slider {
+	background-color: #36b30c;
+}
+
+input:focus + .slider {
+	box-shadow: 0 0 1px #36b30c;
+}
+
+input:checked + .slider:before {
+	-webkit-transform: translateX(26px);
+	-ms-transform: translateX(26px);
+	transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+	border-radius: 34px;
+}
+
+.slider.round:before {
+	border-radius: 50%;
+}
+
+.switch-around {
+	padding-right: 15px;
+}
+
+/* ---------------------------------------     APP BOXES    -------------------------------------------- */
+
+/* Container for each picture + text shape*/
+.href-content-div {
+	display: inline-block;
+	text-align: center;
+
+	padding: 0px 0px;
+	border: 20px solid #957a4c;
+	border-radius: 10px;
+	background-color: #957a4c;
+}
+
+/* Text under each image*/
+.text-href {
+	background-color: #957a4c;
+	padding: 10px;
+	padding-bottom: 4px;
+	margin: 0px 0px;
+	font-size: 25px;
+	font-weight: bold;
+	color: white;
+}
+
+.img-href {
+	border-radius: 10px;
+}
+
+a.href-content {
+	text-decoration: none;
+	margin: 30px;
+	margin-top: 10px;
+}
+
+.applications {
+	display: flex;
+	height: 100%;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+h1 {
+	padding-left: 100px;
+	font-size: 30px;
+	font-weight: bold;
+	color: #1867b7;
+}
