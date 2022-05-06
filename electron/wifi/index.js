@@ -1,17 +1,17 @@
 const { resolve } = require("path");
-var sudo = require("sudo-prompt"); // Delete if general admin
+var sudo = require("sudo-prompt"); // Not needed if general admin
 
 // Start hotspot
 function startHotspot({ ssid, password }) {
 	const { exec } = require("child_process");
 	var options = {
-		// Delete if general admin
+		// Not needed if general admin
 		name: "LocalArch",
 	};
 
 	return new Promise((resolve) => {
 		sudo.exec(
-			// Remove sudo. if general admin
+			// sudo not needed if general admin
 			`netsh wlan set hostednetwork mode=allow ssid="${ssid}" key="${password}" keyUsage=persistent & netsh wlan start hostednetwork`,
 			options,
 			(error, stdout, stderr) => {
@@ -33,11 +33,6 @@ function startHotspot({ ssid, password }) {
 	});
 }
 
-/*startHotspot({
-	ssid: "TestWifi3",
-	password: "pepito2022",
-});*/
-
 // Stop hotspot
 function stopHotspot() {
 	const { exec } = require("child_process");
@@ -51,8 +46,6 @@ function stopHotspot() {
 		});
 	});
 }
-
-//stopHotspot();
 
 // Status
 async function statusHotspot() {
@@ -73,14 +66,6 @@ async function statusHotspot() {
 		});
 	});
 }
-
-//statusHotspot();
-
-/*if (statusHotspot()) {
-	console.log("Está iniciado correctamente.");
-} else {
-	console.log("No está iniciado correctamente.");
-}*/
 
 module.exports = {
 	statusHotspot,

@@ -7,8 +7,13 @@ export const hotspotSlice = createSlice({
 		password: "DefaultPassword",
 		status: false,
 	},
-	reducers: {},
+	reducers: {
+		setHotspotValues: (state, action) => {
+			state.ssid = action.payload.ssid;
+			state.password = action.payload.password;
+		},
+	},
 });
 
-//export const {} = hotspotSlice.actions;
+export const { setHotspotValues } = hotspotSlice.actions;
 export default hotspotSlice.reducer;

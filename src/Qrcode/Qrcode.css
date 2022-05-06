@@ -1,0 +1,13 @@
+div.qrcode-gen-div {
+	display: flex;
+	height: 100%;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+}
+div.qrcode-hotspot {
+	padding: 30px;
+}
+div.qrcode-webpage {
+	padding: 30px;
+}
