@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import Home from "./Home";
 import Settings from "./Settings";
-import Qrcode from "./Qrcode";
+import QrcodeView from "./Qrcode";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -18,7 +18,7 @@ root.render(
 					<Route path="/" element={<Main />}>
 						<Route path="" element={<Home />} />
 						<Route path="settings" element={<Settings />} />
-						<Route path="qrcode" element={<Qrcode />} />
+						<Route path="qrcode" element={<QrcodeView />} />
 					</Route>
 					<Route
 						path="*"

@@ -1,10 +1,27 @@
 import "./Qrcode.css";
 import QRCode from "react-qr-code";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setHotspotValues } from "../redux/hotspotSlice";
 
-export default function Qrcode() {
-	const ssidQrcode = useSelector((state) => state.hotspot.ssid);
-	const passwordQrcode = useSelector((state) => state.hotspot.password);
+export default function QrcodeView() {
+	let ssidQrcode = useSelector((state) => state.hotspot.ssid);
+	let passwordQrcode = useSelector((state) => state.hotspot.password);
+	const dispatch = useDispatch();
+
+	/*let ssidQrcode;
+	let passwordQrcode;*/
+	settingQrcode();
+	async function settingQrcode() {
+		console.log("qrcode");
+		const datas = await window.electronAPI.getSettings();
+		ssidQrcode = datas.ssid;
+		passwordQrcode = datas.password;
+		console.log(ssidQrcode);
+		console.log(passwordQrcode);
+		//isLoadingFunc = false;
+		let valuesObject = { ssid: ssidQrcode, password: passwordQrcode };
+		dispatch(setHotspotValues(valuesObject));
+	}
 
 	return (
 		<div className="qrcode-gen-div">

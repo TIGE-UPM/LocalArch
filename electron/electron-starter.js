@@ -3,6 +3,7 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const url = require("url");
 const Wifi = require("./wifi");
+const Setting = require("./settings");
 
 function createWindow() {
 	// Create the browser window.
@@ -50,6 +51,19 @@ app.whenReady().then(() => {
 	ipcMain.handle("status-wifi", async () => {
 		const statusSol = await Wifi.statusHotspot();
 		return statusSol;
+	});
+
+	ipcMain.handle("update-hotspot", async (event, settings) => {
+		console.log("update values");
+		console.log(settings);
+		const set = await Setting.setSettings(settings);
+		return set;
+	});
+
+	ipcMain.handle("get-settings", async () => {
+		console.log("get-settings");
+		const getset = await Setting.getSettings();
+		return getset;
 	});
 
 	createWindow();

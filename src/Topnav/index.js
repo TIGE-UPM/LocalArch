@@ -1,8 +1,8 @@
 import "./Topnav.css";
-import { useSelector } from "react-redux";
+/*import { useSelector } from "react-redux";*/
 
 export default function Topnav() {
-	const ssid = useSelector((state) => {
+	/*const ssid = useSelector((state) => {
 		console.log(state);
 		return state.hotspot.ssid;
 	});
@@ -14,11 +14,15 @@ export default function Topnav() {
 	const statusCurrent = useSelector((state) => state.hotspot.status);
 	console.log(statusCurrent);
 
-	let checkbox_flag = true; // True: able start hotspot (its off), False: able to stop hotspot (is on)
+	let checkbox_flag = true; // True: able start hotspot (its off), False: able to stop hotspot (is on)*/
 
 	async function turnOnWifi() {
 		console.log("onwifi");
-		await window.electronAPI.hotspotOn(ssid, password);
+		const datas = await window.electronAPI.getSettings();
+		console.log(datas);
+		const ssidNew = datas.ssid;
+		const passNew = datas.password;
+		await window.electronAPI.hotspotOn(ssidNew, passNew);
 	}
 
 	async function turnOffWifi() {
@@ -30,15 +34,16 @@ export default function Topnav() {
 		await window.electronAPI.hotspotOff();
 	}
 
-	function turnHotspot() {
-		if (checkbox_flag) {
+	async function turnHotspot() {
+		const hotspotTurn = await statusWifi();
+		if (!hotspotTurn) {
 			console.log("on");
-			checkbox_flag = false;
 			turnOnWifi();
+			wifiStatus = true;
 		} else {
 			console.log("off");
-			checkbox_flag = true;
 			turnOffWifi();
+			wifiStatus = false;
 		}
 	}
 
@@ -46,6 +51,7 @@ export default function Topnav() {
 		console.log("status");
 		const wifiStatus = await window.electronAPI.hotspotStatus();
 		console.log(wifiStatus);
+		return wifiStatus;
 		/*if (wifiStatus) {
 			document.getElementById("wifiStatus").innerText =
 				"Está iniciado correctamente.";
@@ -55,11 +61,26 @@ export default function Topnav() {
 		}*/
 	}
 
+	let wifiStatus = false;
+	async function statusChecked() {
+		const statusObtained = await statusWifi();
+		if (statusObtained) {
+			wifiStatus = true;
+		} else {
+			wifiStatus = false;
+		}
+	}
+	statusChecked();
+
 	return (
 		<div className="topnav">
 			<div className="switch-around">
 				<label className="switch">
-					<input type="checkbox" onChange={turnHotspot}></input>
+					<input
+						type="checkbox"
+						checked={wifiStatus}
+						onChange={turnHotspot}
+					></input>
 					<span className="slider round"></span>
 				</label>
 			</div>

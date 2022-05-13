@@ -16,4 +16,13 @@ contextBridge.exposeInMainWorld("electronAPI", {
 		console.log("hotspotStatus");
 		return await ipcRenderer.invoke("status-wifi");
 	},
+	setSettings: async (settings) => {
+		console.log("updateValues");
+		console.log(settings);
+		return await ipcRenderer.invoke("update-hotspot", settings);
+	},
+	getSettings: async () => {
+		console.log("getSettings preload");
+		return await ipcRenderer.invoke("get-settings");
+	},
 });
