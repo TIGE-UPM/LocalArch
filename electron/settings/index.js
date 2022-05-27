@@ -1,30 +1,24 @@
 const fs = require("fs").promises;
 
-async function setSettings(settings) {
-	console.log("set settings index");
-	console.log(settings);
-	console.log(JSON.stringify(settings));
-	await fs.writeFile("./config.json", JSON.stringify(settings));
+let settings = null;
+
+async function setSettings(_settings) {
+	settings = _settings;
+	await fs.writeFile("./settings/config.json", JSON.stringify(settings));
 }
 
 async function getSettings() {
-	console.log("settings index");
-	const data = await fs.readFile("./config.json", "utf-8");
-	try {
-		if (data.length == 0) {
-			console.log("empty config");
-			let defaultValues = {
+	if (!settings) {
+		if (fs.existsSync("./settings/config.json")) {
+			settings = JSON.parse(await fs.readFile("./settings/config.json"));
+		} else {
+			settings = {
 				ssid: "DefaultName",
 				password: "DefaultPassword",
 			};
-			const aux1 = await setSettings(defaultValues);
-			return defaultValues;
-		} else {
-			console.log("not empty config");
-			return JSON.parse(data);
 		}
-	} catch (err) {
-		console.log(err);
 	}
+
+	return settings;
 }
 module.exports = { setSettings, getSettings };
