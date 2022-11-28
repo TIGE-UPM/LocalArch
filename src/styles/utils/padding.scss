@@ -1,0 +1,68 @@
+@use "sass:map";
+
+@mixin padding($dir-text, $size-text, $device: "") {
+	$dir: map.get($dirs, $dir-text);
+	$size: map.get($sizes, $size-text);
+
+	@if $device == "" {
+		@if $dir-text == "" {
+			.p-#{$size-text} {
+				padding: $size;
+			}
+		} @else if $dir-text == x {
+			.p#{$dir-text}-#{$size-text} {
+				padding-left: $size;
+				padding-right: $size;
+			}
+		} @else if $dir-text == y {
+			.p#{$dir-text}-#{$size-text} {
+				padding-top: $size;
+				padding-bottom: $size;
+			}
+		} @else {
+			.p#{$dir-text}-#{$size-text} {
+				padding-#{$dir}: $size;
+			}
+		}
+	} @else {
+		@if $dir-text == "" {
+			.p-#{$device}-#{$size-text} {
+				padding: $size;
+			}
+		} @else if $dir-text == x {
+			.p#{$dir-text}-#{$device}-#{$size-text} {
+				padding-left: $size;
+				padding-right: $size;
+			}
+		} @else if $dir-text == y {
+			.p#{$dir-text}-#{$device}-#{$size-text} {
+				padding-top: $size;
+				padding-bottom: $size;
+			}
+		} @else {
+			.p#{$dir-text}-#{$device}-#{$size-text} {
+				padding-#{$dir}: $size;
+			}
+		}
+	}
+}
+
+@each $size, $s-value in $sizes {
+	@include padding("", $size);
+
+	@each $dir, $d-value in $dirs {
+		@include padding($dir, $size);
+	}
+}
+
+@each $device, $size in $devices {
+	@media (min-width: $size) {
+		@each $size, $s-value in $sizes {
+			@include padding("", $size, $device);
+
+			@each $dir, $d-value in $dirs {
+				@include padding($dir, $size, $device);
+			}
+		}
+	}
+}

@@ -1,10 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export const hotspotSlice = createSlice({
-	name: "hotspot",
+	name: 'hotspot',
 	initialState: {
-		ssid: "DefaultName",
-		password: "DefaultPassword",
+		ssid: 'DefaultName',
+		password: 'DefaultPassword',
 		status: false,
 	},
 	reducers: {

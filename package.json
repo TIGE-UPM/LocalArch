@@ -7,25 +7,32 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
+    "electron-sudo": "^4.0.12",
+    "express-http-proxy": "^1.6.3",
+    "http-proxy": "^1.18.1",
+    "node-stream-zip": "^1.15.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-qr-code": "^2.0.7",
     "react-redux": "^8.0.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "react-use": "^17.4.0",
+    "sass": "^1.55.0",
     "sqlite3": "^5.0.7",
     "sudo-prompt": "^9.2.1",
+    "tcp-port-used": "^1.0.2",
     "web-vitals": "^2.1.4"
   },
   "main": "electron/electron-starter.js",
   "homepage": "./",
   "scripts": {
-    "start": "set BROWSER=none && react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "set BROWSER=none && craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject",
     "electron": "electron .",
-    "electron-dev": "set ELECTRON_START_URL=http://localhost:3000 && electron ."
+    "electron-dev": "ELECTRON_START_URL=http://localhost:3000 electron ."
   },
   "eslintConfig": {
     "extends": [
@@ -46,7 +53,10 @@
     ]
   },
   "devDependencies": {
+    "@craco/craco": "^7.0.0-alpha.7",
     "electron": "^18.1.0",
+    "eslint": "^8.24.0",
+    "eslint-plugin-react": "^7.31.8",
     "foreman": "^3.0.1"
   }
 }

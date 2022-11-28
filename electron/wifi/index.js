@@ -1,74 +1,87 @@
-const { resolve } = require("path");
-var sudo = require("sudo-prompt"); // Not needed if general admin
+const { networkInterfaces } = require('os');
+var sudo = require('sudo-prompt'); // Not needed if general admin
 
-// Start hotspot
-function startHotspot({ ssid, password }) {
-	const { exec } = require("child_process");
-	var options = {
-		// Not needed if general admin
-		name: "LocalArch",
-	};
-
-	return new Promise((resolve) => {
-		sudo.exec(
-			// sudo not needed if general admin
-			`netsh wlan set hostednetwork mode=allow ssid="${ssid}" key="${password}" keyUsage=persistent & netsh wlan start hostednetwork`,
-			options,
-			(error, stdout, stderr) => {
-				//console.log(stdout);
-				//console.error(stderr);
-				//console.error(error);
-				/*sudo.exec(
-					"netsh wlan start hostednetwork",
-					options,
-					(error, stdout, stderr) => {
-						console.log(stdout);
-						console.error(stderr);
-						console.error(error);
-					}
-				);*/
-				resolve();
+const defaultOptions = {
+	name: 'LocalArch'
+};
+async function sudoexec(command, options) {
+	return new Promise((resolve, reject) => {
+		sudo.exec(command, {...defaultOptions, ...options}, (error, stdout, stderr) => {
+			console.log(error, stdout, stderr);
+			if (error) {
+				reject(error);
+			} else {
+				resolve(stdout);
 			}
-		);
+		});
 	});
 }
 
-// Stop hotspot
-function stopHotspot() {
-	const { exec } = require("child_process");
+console.log(networkInterfaces());
 
-	return new Promise((resolve) => {
-		exec("netsh wlan stop hostednetwork", (error, stdout, stderr) => {
-			//console.log(stdout);
-			//console.error(stderr);
-			//console.error(error);
-			resolve();
-		});
-	});
+const isWin = process.platform === 'win32';
+
+// Start hotspot
+async function startHotspot({ ssid, password }) {
+	if (isWin) {
+		await sudoexec(`netsh wlan set hostednetwork mode=allow ssid=${ssid} key=${password}`);
+		await sudoexec('netsh wlan start hostednetwork');
+	} else {
+		try {
+			await sudoexec(`SSID=${ssid} PASSWORD=${password} ${__dirname}/linux-start.sh`);
+		} catch (error) {
+			console.log(error);
+			throw error;
+		}
+		console.log(networkInterfaces());
+	}
+}
+
+// Stop hotspot
+async function stopHotspot() {
+	if (isWin) {
+		await sudoexec('netsh wlan stop hostednetwork');
+	} else {
+		try {
+			await sudoexec(`${__dirname}/linux-stop.sh`);
+		} catch (error) {
+			console.log(error);
+			throw error;
+		}
+	}
 }
 
 // Status
 async function statusHotspot() {
-	const { exec } = require("child_process");
+	if (isWin) {
+		const response = await sudoexec('netsh wlan show hostednetwork');
+		return response.includes('Iniciado');
+	} else {
+		try {
+			const response = await sudoexec(`${__dirname}/linux-status.sh`);
+			return response.includes('activada');
+		} catch (error) {
+			return false;
+		}
+		
+	}
+}
 
-	return new Promise((resolve) => {
-		exec("netsh wlan show hostednetwork", (error, stdout, stderr) => {
-			//console.log(stdout);
-			//console.error(stderr);
-			//console.error(error);
-			if (stdout.includes("Iniciado")) {
-				console.log("Está iniciado correctamente.");
-				resolve(true);
-			} else {
-				console.log("No está iniciado correctamente.");
-				resolve(false);
-			}
-		});
-	});
+function getWifiIP() {
+	const interfaces = networkInterfaces();
+	console.log(interfaces);
+	for (const interfaceName in interfaces) {
+		if (interfaceName.includes('wlp')) {
+			console.log(interfaceName);
+			console.log(interfaces[interfaceName]);
+			return interfaces[interfaceName].find(ifIP => ifIP.family === 'IPv4').address;
+		}
+	}
 }
 
 module.exports = {
 	statusHotspot,
 	startHotspot,
 	stopHotspot,
+	getWifiIP,
 };

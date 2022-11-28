@@ -1,0 +1,5 @@
+@for $i from 1 through 5 {
+	.br-#{$i} {
+		border-radius: (5px * $i);
+	}
+}

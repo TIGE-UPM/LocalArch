@@ -1,0 +1,11 @@
+.dropdown-container {
+	position: relative;
+
+	.dropdown-content-container {
+		z-index: 400;
+		max-height: var(--max-height);
+		transition: max-height 0.2s;
+		width: 100%;
+		overflow: hidden;
+	}
+}

@@ -1,0 +1,79 @@
+@mixin max-width($device, $size) {
+	@if $device == "" {
+		.max-w-#{$size} {
+			max-width: $size / 12 * 100%;
+		}
+	} @else {
+		.max-w-#{$device}-#{$size} {
+			max-width: $size / 12 * 100%;
+		}
+	}
+}
+
+@mixin max-height($device, $size) {
+	@if $device == "" {
+		.max-h-#{$size} {
+			max-height: $size / 12 * 100%;
+		}
+	} @else {
+		.max-h-#{$device}-#{$size} {
+			max-height: $size / 12 * 100%;
+		}
+	}
+}
+
+@for $i from 0 through 12 {
+	@include max-width("", $i);
+}
+
+@each $device, $size in $devices {
+	@media (min-width: $size) {
+		@for $i from 0 through 12 {
+			@include max-width($device, $i);
+		}
+	}
+}
+
+@for $i from 0 through 12 {
+	@include max-height("", $i);
+}
+
+@each $device, $size in $devices {
+	@media (min-width: $size) {
+		@for $i from 0 through 12 {
+			@include max-height($device, $i);
+		}
+	}
+}
+
+.h-100 {
+	height: 100%;
+}
+
+.w-100 {
+	width: 100%;
+}
+
+.w-auto {
+	width: auto;
+}
+
+.w-fit {
+	width: fit-content;
+}
+
+.h-fit {
+	height: fit-content;
+}
+
+.overflow-hidden {
+	overflow: hidden;
+}
+
+.overflow-x-hidden {
+	overflow-x: hidden;
+}
+
+.overflow-y-hidden {
+	overflow-y: hidden;
+}

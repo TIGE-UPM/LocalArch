@@ -1,0 +1,31 @@
+@use "sass:map";
+
+@each $name, $shadow in $shadows {
+	.shadow-#{$name} {
+		box-shadow: var(--shadow-#{$name});
+	}
+	.shadow-hover-#{$name}:hover,
+	.shadow-hover-#{$name}.hover {
+		box-shadow: var(--shadow-#{$name});
+	}
+}
+
+@each $name, $color in $colors {
+	.shadow-#{$name} {
+		--shadow-color: #{$color};
+	}
+}
+
+.shadow-filter {
+	filter: drop-shadow(12px 12px 10px rgb(0 0 0 / 50%));
+}
+
+.shadow-filter-hover-1:hover,
+.shadow-filter-hover-1.hover {
+	filter: drop-shadow(2px 2px 4px rgb(0 0 0 / 50%));
+}
+
+.shadow-filter-hover-2:hover,
+.shadow-filter-hover-2.hover {
+	filter: drop-shadow(12px 12px 10px rgb(0 0 0 / 50%));
+}

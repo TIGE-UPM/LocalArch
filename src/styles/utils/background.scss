@@ -1,0 +1,9 @@
+@mixin background($theme-text, $color) {
+	.bg-#{'' + $theme-text} {
+		background-color: $color;
+	}
+}
+
+@each $theme-text, $color in $colors {
+	@include background($theme-text, $color);
+}

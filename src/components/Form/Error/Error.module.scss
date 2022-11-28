@@ -1,0 +1,16 @@
+.error-container {
+	min-height: 20px;
+	color: red;
+
+	.icon-container {
+		background-color: red;
+		width: 15px;
+		height: 15px;
+		border-radius: 12px;
+
+		.icon {
+			width: 12px;
+			height: 12px;
+		}
+	}
+}

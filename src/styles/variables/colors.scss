@@ -1,0 +1,28 @@
+@use "sass:color";
+
+$primary: #09f;
+$primary-soft: color.scale($primary, $lightness: 40%);
+$primary-hard: color.scale($primary, $lightness: -20%);
+$secondary: color.scale($primary, $lightness: 50%);
+$secondary-soft: color.scale($secondary, $lightness: 40%);
+$secondary-hard: color.scale($secondary, $lightness: -20%);
+$grey-back: #e6e6e6;
+$grey-soft: #afafaf;
+$green-correct: #419b45;
+$red-wrong: #d9534f;
+$marengo: #4c5866;
+$colors: (
+	primary: $primary,
+	primary-soft: $primary-soft,
+	primary-hard: $primary-hard,
+	secondary: $secondary,
+	secondary-soft: $secondary-soft,
+	secondary-hard: $secondary-hard,
+	grey-back: $grey-back,
+	grey-soft: $grey-soft,
+	green-correct: $green-correct,
+	red-wrong: $red-wrong,
+	marengo: $marengo,
+	white: white,
+	black: black,
+);

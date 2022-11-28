@@ -1,98 +1,80 @@
-import "./Topnav.css";
-/*import { useSelector } from "react-redux";*/
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
-export default function Topnav() {
-	/*const ssid = useSelector((state) => {
-		console.log(state);
-		return state.hotspot.ssid;
-	});
-	console.log(ssid);
+import Spinner from '../components/Spinner';
 
-	const password = useSelector((state) => state.hotspot.password);
-	console.log(password);
+import './Topnav.css';
 
-	const statusCurrent = useSelector((state) => state.hotspot.status);
-	console.log(statusCurrent);
+function Topnav() {
+	const [wifiStatus, setWifiStatus] = useState(false);
+	const [wifiLoading, setWifiLoading] = useState(false);
 
-	let checkbox_flag = true; // True: able start hotspot (its off), False: able to stop hotspot (is on)*/
-
+	
 	async function turnOnWifi() {
-		console.log("onwifi");
-		const datas = await window.electronAPI.getSettings();
-		console.log(datas);
-		const ssidNew = datas.ssid;
-		const passNew = datas.password;
-		await window.electronAPI.hotspotOn(ssidNew, passNew);
+		console.log('onwifi');
+		const data = await window.ipcRenderer.invoke('get-settings');
+		console.log(data);
+		await window.ipcRenderer.invoke('hotspot-on', data.ssid, data.password);
 	}
 
 	async function turnOffWifi() {
-		console.log("offwifi");
-		/*const ssidInput = document.getElementById("ssid");
-		const passwordInput = document.getElementById("password");
-		ssidInput.value = "";
-		passwordInput.value = "";*/
-		await window.electronAPI.hotspotOff();
+		console.log('offwifi');
+		await window.ipcRenderer.invoke('hotspot-off');
 	}
 
 	async function turnHotspot() {
-		const hotspotTurn = await statusWifi();
-		if (!hotspotTurn) {
-			console.log("on");
-			turnOnWifi();
-			wifiStatus = true;
-		} else {
-			console.log("off");
-			turnOffWifi();
-			wifiStatus = false;
+		setWifiLoading(true);
+		try {
+			if (!wifiStatus) {
+				console.log('on');
+				await turnOnWifi();
+				setWifiStatus(true);
+			} else {
+				console.log('off');
+				await turnOffWifi();
+				setWifiStatus(false);
+			}
+		} catch (error) {
+			console.log(error);
+			alert('No se ha podido iniciar el wifi');
+		} finally {
+			setWifiLoading(false);
 		}
 	}
 
-	async function statusWifi() {
-		console.log("status");
-		const wifiStatus = await window.electronAPI.hotspotStatus();
-		console.log(wifiStatus);
-		return wifiStatus;
-		/*if (wifiStatus) {
-			document.getElementById("wifiStatus").innerText =
-				"Está iniciado correctamente.";
-		} else {
-			document.getElementById("wifiStatus").innerText =
-				"No está iniciado correctamente.";
-		}*/
-	}
-
-	let wifiStatus = false;
-	async function statusChecked() {
-		const statusObtained = await statusWifi();
-		if (statusObtained) {
-			wifiStatus = true;
-		} else {
-			wifiStatus = false;
-		}
-	}
-	statusChecked();
+	console.log(wifiStatus);
+	console.log(wifiLoading);
 
 	return (
-		<div className="topnav">
-			<div className="switch-around">
-				<label className="switch">
-					<input
-						type="checkbox"
-						checked={wifiStatus}
-						onChange={turnHotspot}
-					></input>
-					<span className="slider round"></span>
-				</label>
+		<div className="topnav flex row justify-space-between">
+			<NavLink className="home" to="/">
+				Home
+			</NavLink>
+
+			<div className='flex row'>
+				<NavLink className="qrcode" to="/qrcode">
+					QR Code
+				</NavLink>
+				<NavLink className="settings" to="/settings">
+					Settings
+				</NavLink>
+				<div className="switch-around align-self-center px-1">
+					{wifiLoading ? (
+						<Spinner show={wifiLoading} />
+					) : (
+						<label className="switch">
+							<input
+								type="checkbox"
+								checked={wifiStatus}
+								onChange={turnHotspot}
+							></input>
+							<span className="slider round"></span>
+						</label>
+					)}
+				</div>
 			</div>
-			<a className="qrcode" href="/qrcode">
-				QR Code
-			</a>
-			<a className="settings" href="/settings">
-				Ajustes
-			</a>
-			<a className="home" href="/">
-				Inicio
-			</a>
 		</div>
 	);
 }
+
+export default Topnav;

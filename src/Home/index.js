@@ -1,141 +1,105 @@
-import "./Home.css";
+import React, {useState, useEffect}  from 'react';
+import { NavLink } from 'react-router-dom';
+import ButtonLink from '../components/ButtonLink';
 
-export default function Home() {
+import './Home.scss';
+
+function Home() {
+	const [apps, setApps] = useState([]);
+	const [appsStatus, setAppsStatus] = useState({});
+
+	async function loadApps() {
+		const tmpApps = await window.electronAPI.getInstalledApps();
+		console.log(tmpApps);
+		setApps(tmpApps);
+	}
+
+	async function loadAppsStatus() {
+		const tmpAppsStatus = await window.ipcRenderer.invoke('get-apps-status');
+		console.log(tmpAppsStatus);
+		setAppsStatus(tmpAppsStatus);
+	}
+
+	async function startApp(appName) {
+		console.log(appName);
+		const wifiStatus = await window.ipcRenderer.invoke('status-wifi');
+		if (!wifiStatus) {
+			alert('Primero tienes que iniciar el wifi');
+			return;
+		}
+		await window.ipcRenderer.invoke('start-app', appName);
+		await loadAppsStatus();
+	}
+
+	async function stopApp(appName) {
+		console.log(appName);
+		await window.ipcRenderer.invoke('stop-app', appName);
+		await loadAppsStatus();
+	}
+
+	useEffect(() => {
+		loadApps();
+		loadAppsStatus();
+	}, []);
+
+	async function openApp() {
+		const runningApp = await window.ipcRenderer.invoke('get-running-app');
+		console.log(runningApp);
+		window.open(`http://127.0.0.1:${runningApp?.port}${runningApp?.config?.adminPath}`);
+	}
+
+	async function installApp() {
+		console.log('installing');
+		try {
+			await window.ipcRenderer.invoke('install-app');
+			await loadApps();
+		} catch (error) {
+			console.log(error);
+		}
+		console.log('installed');
+	}
+
+	console.log(apps);
+	console.log(appsStatus);
+
 	return (
-		<div className="home-body">
-			<h1>Aplicaciones</h1>
-
-			<div className="applications">
-				<a
-					className="href-content"
-					href="https://moodle.upm.es/titulaciones/oficiales/login/login.php"
-				>
-					<div className="href-content-div">
-						<img
-							className="img-href"
-							alt="Moodle Access"
-							src="https://cdn.pixabay.com/photo/2015/11/15/07/47/geometry-1044090_960_720.jpg"
-							width="225"
-							height="150"
-						></img>
-						<p className="text-href"> Moodle </p>
-					</div>
-				</a>
-
-				<a
-					className="href-content"
-					href="https://moodle.upm.es/titulaciones/oficiales/login/login.php"
-				>
-					<div className="href-content-div">
-						<img
-							className="img-href"
-							alt="Test Access"
-							src="https://cdn.pixabay.com/photo/2017/07/02/09/03/books-2463779_960_720.jpg"
-							width="225"
-							height="150"
-						></img>
-						<p className="text-href"> Test </p>
-					</div>
-				</a>
-
-				<a
-					className="href-content"
-					href="https://moodle.upm.es/titulaciones/oficiales/login/login.php"
-				>
-					<div className="href-content-div">
-						<img
-							className="img-href"
-							alt="Examen Access"
-							src="https://cdn.pixabay.com/photo/2016/11/29/01/16/abacus-1866497_960_720.jpg"
-							width="225"
-							height="150"
-						></img>
-						<p className="text-href"> Examen </p>
-					</div>
-				</a>
-
-				<a
-					className="href-content"
-					href="https://moodle.upm.es/titulaciones/oficiales/login/login.php"
-				>
-					<div className="href-content-div">
-						<img
-							className="img-href"
-							alt="Examen Access"
-							src="https://cdn.pixabay.com/photo/2016/03/09/15/29/books-1246674_960_720.jpg"
-							width="225"
-							height="150"
-						></img>
-						<p className="text-href"> Clase </p>
-					</div>
-				</a>
+		<div className="home-container p-2">
+			<div className='flex row gap-2'>
+				<h1>Apps</h1>
+				<ButtonLink type="button" style='button' className='flex center align-self-center bg-marengo' onClick={installApp}>
+					Install new app
+				</ButtonLink>
 			</div>
 
-			<div className="applications">
-				<a
-					className="href-content"
-					href="https://moodle.upm.es/titulaciones/oficiales/login/login.php"
-				>
-					<div className="href-content-div">
-						<img
-							className="img-href"
-							alt="Moodle Access"
-							src="https://cdn.pixabay.com/photo/2015/11/15/07/47/geometry-1044090_960_720.jpg"
-							width="225"
-							height="150"
-						></img>
-						<p className="text-href"> Moodle </p>
+			<div className="applications flex row justify-start">
+				{apps.map((app) => (
+					<div className={`application flex column gap-2 shadow-2 shadow-primary br-2 p-2 ${appsStatus[app.name]?.running ? 'running' : ''}`} key={app.name}>
+						<span className='font-marengo font-bold'>{ app.icon ? <img src={app.icon} alt="app-icon" /> : null}</span>
+						
+						{ appsStatus[app.name]?.running ? (
+							<>
+								<NavLink className='font-marengo font-5 font-bold' to="/app">{app.name}</NavLink>
+								<div className='flex row gap-1 align-items-center'>
+									<div className='button flex center grow-1 bg-grey-back font-black br-1' onClick={() => stopApp(app.name)}>
+										Stop
+									</div>
+									<div className='button bg-green-correct font-white br-1' onClick={() => openApp()}>Go</div>
+								</div>
+								
+							</>
+						) : (
+							<>
+								<span className='font-marengo font-5 font-bold'>{app.name}</span>
+								<div className='button flex center bg-primary font-white br-1' onClick={() => startApp(app.name)}>
+									Start
+								</div>
+							</>
+						)}
 					</div>
-				</a>
-
-				<a
-					className="href-content"
-					href="https://moodle.upm.es/titulaciones/oficiales/login/login.php"
-				>
-					<div className="href-content-div">
-						<img
-							className="img-href"
-							alt="Test Access"
-							src="https://cdn.pixabay.com/photo/2017/07/02/09/03/books-2463779_960_720.jpg"
-							width="225"
-							height="150"
-						></img>
-						<p className="text-href"> Test </p>
-					</div>
-				</a>
-
-				<a
-					className="href-content"
-					href="https://moodle.upm.es/titulaciones/oficiales/login/login.php"
-				>
-					<div className="href-content-div">
-						<img
-							className="img-href"
-							alt="Examen Access"
-							src="https://cdn.pixabay.com/photo/2016/11/29/01/16/abacus-1866497_960_720.jpg"
-							width="225"
-							height="150"
-						></img>
-						<p className="text-href"> Examen </p>
-					</div>
-				</a>
-
-				<a
-					className="href-content"
-					href="https://moodle.upm.es/titulaciones/oficiales/login/login.php"
-				>
-					<div className="href-content-div">
-						<img
-							className="img-href"
-							alt="Examen Access"
-							src="https://cdn.pixabay.com/photo/2016/03/09/15/29/books-1246674_960_720.jpg"
-							width="225"
-							height="150"
-						></img>
-						<p className="text-href"> Clase </p>
-					</div>
-				</a>
+				))}
 			</div>
 		</div>
 	);
 }
+
+export default Home;

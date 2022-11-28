@@ -1,0 +1,65 @@
+@import "./fonts";
+
+$label-height: 20px;
+
+html {
+	height: 100%;
+	font-family: Inter, Arial, Verdana, Tahoma, sans-serif;
+	font-weight: normal;
+	font-style: normal;
+
+	body {
+		margin: 0;
+		height: 100%;
+
+		#root {
+			height: 100%;
+		}
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+:root {
+	@each $name, $color in $colors {
+		--#{"" + $name}: #{$color};
+	}
+
+	@each $name, $shadow in $shadows {
+		--shadow-#{$name}: #{$shadow};
+	}
+}
+
+table {
+	text-align: center;
+	border-collapse: collapse;
+
+	thead {
+		th {
+			padding: 10px;
+			height: $label-height;
+			line-height: $label-height;
+			font-weight: 500;
+			color: var(--gray-500);
+		}
+	}
+
+	tbody {
+		td {
+			border: 2px solid #1f82c1;
+			border-right: none;
+			border-left: none;
+			padding: 15px 5px;
+
+			&:first-child {
+				border-left: 2px solid #1f82c1;
+			}
+
+			&:last-child {
+				border-right: 2px solid #1f82c1;
+			}
+		}
+	}
+}

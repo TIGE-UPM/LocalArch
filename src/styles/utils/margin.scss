@@ -1,0 +1,34 @@
+@use "sass:map";
+
+@mixin margin($dir-text, $size-text) {
+	$dir: map.get($dirs, $dir-text);
+	$size: map.get($sizes, $size-text);
+
+	@if $dir-text == "" {
+		.m-#{$size-text} {
+			margin: $size;
+		}
+	} @else if $dir-text == x {
+		.m#{$dir-text}-#{$size-text} {
+			margin-left: $size;
+			margin-right: $size;
+		}
+	} @else if $dir-text == y {
+		.m#{$dir-text}-#{$size-text} {
+			margin-top: $size;
+			margin-bottom: $size;
+		}
+	} @else {
+		.m#{$dir-text}-#{$size-text} {
+			margin-#{$dir}: $size;
+		}
+	}
+}
+
+@each $size, $s-value in $sizes {
+	@include margin("", $size);
+
+	@each $dir, $d-value in $dirs {
+		@include margin($dir, $size);
+	}
+}

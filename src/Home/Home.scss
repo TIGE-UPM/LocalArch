@@ -1,0 +1,11 @@
+.application {
+	border: solid 2px white;
+	&.running {
+		border: solid 2px green;
+	}
+
+	.button {
+		padding: 5px 5px;
+		cursor: pointer;
+	}
+}

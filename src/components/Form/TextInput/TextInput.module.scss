@@ -1,0 +1,40 @@
+.text-input-container {
+	position: relative;
+	border: 1px solid #c4c4c4;
+
+	.text-input {
+		padding-left: 10px;
+		border: none;
+		background-color: white;
+		max-width: 100%;
+
+		&:focus {
+			outline: none;
+		}
+
+		&::placeholder {
+			color: rgba($color: #000, $alpha: 50%);
+		}
+	}
+
+	.icon-container {
+		position: absolute;
+		width: 20px;
+		height: 100%;
+
+		& ~ .text-input {
+			padding-left: 35px;
+		}
+	}
+
+	.show-password {
+		position: absolute;
+		width: 20px;
+		height: 100%;
+		right: 0;
+
+		& ~ .text-input {
+			padding-right: 35px;
+		}
+	}
+}

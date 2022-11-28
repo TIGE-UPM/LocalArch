@@ -1,0 +1,30 @@
+.select-container {
+	.label-container {
+		user-select: none;
+		cursor: pointer;
+		border: 1px solid #c4c4c4;
+
+		.chevron-container {
+			width: 20px;
+		}
+	}
+
+	.options-container {
+		position: absolute;
+		z-index: 1;
+		overflow-y: auto;
+	}
+
+	&.open {
+		.label-container {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+
+			.chevron-container {
+				img {
+					transform: rotate(180deg);
+				}
+			}
+		}
+	}
+}

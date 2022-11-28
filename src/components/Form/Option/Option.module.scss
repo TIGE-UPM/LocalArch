@@ -1,0 +1,18 @@
+.option-container {
+	cursor: pointer;
+	user-select: none;
+
+	&.disabled {
+		background-color: $grey-back;
+		color: #afafaf;
+		cursor: not-allowed;
+	}
+
+	&:not(.disabled) {
+		&:hover,
+		&.selected {
+			background-color: $marengo;
+			color: white;
+		}
+	}
+}

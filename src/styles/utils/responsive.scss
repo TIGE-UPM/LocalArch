@@ -1,0 +1,51 @@
+@use "sass:math";
+
+@mixin col($device, $size) {
+	@if $device == "" {
+		.col-#{$size} {
+			width: math.div($size, 12) * 100%;
+		}
+	} @else {
+		.col-#{$device}-#{$size} {
+			width: math.div($size, 12) * 100%;
+		}
+	}
+}
+
+@for $i from 0 through 12 {
+	@include col("", $i);
+}
+
+@each $device, $size in $devices {
+	@media (min-width: $size) {
+		@for $i from 1 through 12 {
+			@include col($device, $i);
+		}
+	}
+}
+
+@mixin col-fix($device, $size) {
+	@if $device == "" {
+		.col-fix-#{$size} {
+			width: math.div($size, 24) * 1920px;
+			max-width: 100%;
+		}
+	} @else {
+		.col-fix-#{$device}-#{$size} {
+			width: math.div($size, 24) * 1920px;
+			max-width: 100%;
+		}
+	}
+}
+
+@for $i from 0 through 24 {
+	@include col-fix("", $i);
+}
+
+@each $device, $size in $devices {
+	@media (min-width: $size) {
+		@for $i from 1 through 24 {
+			@include col-fix($device, $i);
+		}
+	}
+}

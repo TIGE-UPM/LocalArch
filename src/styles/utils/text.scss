@@ -1,0 +1,82 @@
+.font-manrope {
+	font-family: Manrope, Arial, Verdana, Tahoma, sans-serif;
+}
+
+.font-inter {
+	font-family: Inter, Arial, Verdana, Tahoma, sans-serif;
+}
+
+@for $i from 0 through 30 {
+	.font-#{$i} {
+		font-size: (10px + 2 * $i);
+	}
+}
+
+$weights: (
+	100: 100,
+	200: 200,
+	300: 300,
+	400: 400,
+	normal: 400,
+	500: 500,
+	600: 600,
+	700: 700,
+	bold: 700,
+	800: 800,
+	900: 900,
+);
+
+@each $name, $weight in $weights {
+	.font-#{$name} {
+		font-weight: $weight;
+	}
+}
+
+.font-italic {
+	font-style: italic;
+}
+
+@each $name, $color in $colors {
+	.font-#{$name} {
+		color: $color;
+	}
+}
+
+$alignments: (
+	start: start,
+	end: end,
+	center: center,
+	justify: justify,
+);
+
+@each $name, $alignment in $alignments {
+	.font-#{$name} {
+		text-align: $alignment;
+	}
+}
+
+.text-select-none {
+	user-select: none;
+}
+
+@each $device, $size in $devices {
+	@media (min-width: $size) {
+		@each $name, $weight in $weights {
+			.font-#{$device}-bold {
+				font-weight: $weight;
+			}
+		}
+
+		@for $i from 0 through 30 {
+			.font-#{$device}-#{$i} {
+				font-size: (10px + 2 * $i);
+			}
+		}
+
+		@each $name, $alignment in $alignments {
+			.font-#{$device}-#{$name} {
+				text-align: $alignment;
+			}
+		}
+	}
+}

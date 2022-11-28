@@ -1,0 +1,108 @@
+@mixin flex-direction($device, $direction) {
+	@if $device == "" {
+		.#{$direction} {
+			flex-direction: $direction;
+		}
+	} @else {
+		.#{$direction}-#{$device} {
+			flex-direction: $direction;
+		}
+	}
+}
+
+@include flex-direction("", row);
+@include flex-direction("", column);
+
+@each $device, $size in $devices {
+	@media (min-width: $size) {
+		@include flex-direction($device, row);
+		@include flex-direction($device, column);
+	}
+}
+
+@mixin grow($size) {
+	.grow-#{$size} {
+		flex-grow: #{$size};
+	}
+}
+
+@for $size from 0 through 10 {
+	@include grow($size);
+}
+
+@mixin gap($label, $size) {
+	.gap-#{$label} {
+		gap: #{$size}px;
+	}
+}
+
+@for $size from 0 through 30 {
+	@include gap($size, $size * 5);
+}
+
+.flex {
+	display: flex;
+}
+
+.inline-flex {
+	display: inline-flex;
+}
+
+.center {
+	justify-content: center;
+	align-items: center;
+}
+
+.center-self {
+	justify-self: center;
+	align-self: center;
+}
+
+$item-alignments: (
+	start: start,
+	end: end,
+	center: center,
+	stretch: stretch,
+	baseline: baseline,
+);
+$content-alignments: (
+	start: start,
+	end: end,
+	center: center,
+	baseline: baseline,
+	space-between: space-between,
+	space-around: space-around,
+	space-evenly: space-evenly,
+);
+
+@each $name, $alignment in $item-alignments {
+	.justify-items-#{$name} {
+		justify-items: $alignment;
+	}
+	.justify-self-#{$name} {
+		justify-self: $alignment;
+	}
+	.align-items-#{$name} {
+		align-items: $alignment;
+	}
+	.align-self-#{$name} {
+		align-self: $alignment;
+	}
+}
+
+@each $name, $alignment in $content-alignments {
+	.justify-#{$name} {
+		justify-content: $alignment;
+	}
+	.align-#{$name} {
+		align-content: $alignment;
+	}
+}
+
+.wrap {
+	flex-wrap: wrap;
+}
+
+.shrink {
+	flex-shrink: 1;
+}

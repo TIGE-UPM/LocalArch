@@ -1,0 +1,11 @@
+.header-cell-container {
+	position: relative;
+
+	&:first-child {
+		border-left: none;
+	}
+
+	&:last-child {
+		border-right: none;
+	}
+}

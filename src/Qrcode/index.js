@@ -1,47 +1,59 @@
-import "./Qrcode.css";
-import QRCode from "react-qr-code";
-import { useSelector, useDispatch } from "react-redux";
-import { setHotspotValues } from "../redux/hotspotSlice";
+import React, {useState} from 'react';
+import QRCode from 'react-qr-code';
+import { useAsync } from 'react-use';
 
-export default function QrcodeView() {
-	let ssidQrcode = useSelector((state) => state.hotspot.ssid);
-	let passwordQrcode = useSelector((state) => state.hotspot.password);
-	const dispatch = useDispatch();
+import './Qrcode.css';
+
+function QrcodeView() {
+	const [wifiSsid, setWifiSsid] = useState('');
+	const [wifiPassword, setWifiPassword] = useState('');
+	const [runningApp, setRunningApp] = useState(false);
 
 	/*let ssidQrcode;
 	let passwordQrcode;*/
-	settingQrcode();
-	async function settingQrcode() {
-		console.log("qrcode");
-		const datas = await window.electronAPI.getSettings();
-		ssidQrcode = datas.ssid;
-		passwordQrcode = datas.password;
-		console.log(ssidQrcode);
-		console.log(passwordQrcode);
-		//isLoadingFunc = false;
-		let valuesObject = { ssid: ssidQrcode, password: passwordQrcode };
-		dispatch(setHotspotValues(valuesObject));
+
+	async function loadWifiSettings() {
+		const {ssid = '', password = ''} = await window.electronAPI.getSettings();
+		setWifiSsid(ssid);
+		setWifiPassword(password);
 	}
 
+	async function loadRunningApp() {
+		const app = await window.ipcRenderer.invoke('get-running-app');
+		console.log(app);
+		setRunningApp(app);
+	}
+
+	useAsync(async () => {
+		await loadWifiSettings();
+		await loadRunningApp();
+	}, []);
+
 	return (
-		<div className="qrcode-gen-div">
-			<div className="qrcode-hotspot">
-				<h1>Hotspot</h1>
+		<div className="qrcode-gen-div flex row">
+			<div className="qrcode-hotspot flex column align-items-center justify-start gap-2">
+				<span className='font-primary-hard font-bold font-10'>Hotspot</span>
 				<div>
 					<QRCode
-						value={`WIFI:T:WPA;S:${ssidQrcode};P:${passwordQrcode};H:flase;`}
+						value={`WIFI:T:WPA;S:${wifiSsid};P:${wifiPassword};H:flase;`}
 					/>
 				</div>
-				<p>SSID: {ssidQrcode}</p>
-				<p>Contraseña: {passwordQrcode}</p>
+				<span>SSID: {wifiSsid}</span>
+				<span>Contraseña: {wifiPassword}</span>
 			</div>
-			<div className="qrcode-webpage">
-				<h1>Webpage</h1>
-				<div>
-					<QRCode value="http://192.168.137.1:3000" />
+			{runningApp ? (
+				<div className="qrcode-webpage flex column align-items-center justify-start gap-2">
+					<span className='font-primary-hard font-bold font-10'>Webpage</span>
+					<div>
+						<QRCode value={`http://127.0.0.1:${runningApp?.port}`} />
+					</div>
+					<span>Web: {`http://127.0.0.1:${runningApp?.port}`} </span>
+					<span>&nbsp;</span>
 				</div>
-				<p>Web: http://192.168.137.1:3000 </p>
-			</div>
+			) : null}
+			
 		</div>
 	);
 }
+
+export default QrcodeView;

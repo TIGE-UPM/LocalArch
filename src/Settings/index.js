@@ -1,79 +1,54 @@
-import "./Settings.css";
-import { useDispatch, useSelector } from "react-redux";
-import { setHotspotValues } from "../redux/hotspotSlice";
+import React from 'react';
 
-export default function Settings() {
-	let ssidQrcode = useSelector((state) => state.hotspot.ssid);
-	let passwordQrcode = useSelector((state) => state.hotspot.password);
-	const dispatch = useDispatch();
+import Components from '@Components';
+import Form from '@Components/Form';
 
-	settingQrcode();
-	async function settingQrcode() {
-		console.log("qrcode");
-		const datas = await window.electronAPI.getSettings();
-		ssidQrcode = datas.ssid;
-		passwordQrcode = datas.password;
-		console.log(ssidQrcode);
-		console.log(passwordQrcode);
-		let valuesObject = { ssid: ssidQrcode, password: passwordQrcode };
-		dispatch(setHotspotValues(valuesObject));
+const { ButtonLink } = Components;
+const { TextInput } = Form;
+
+import './Settings.css';
+import { useAsync } from 'react-use';
+
+function Settings() {
+	const [ssid, setSsid] = React.useState('');
+	const [password, setPassword] = React.useState('');
+
+	async function loadWifiSettings() {
+		const {ssid = '', password = ''} = await window.electronAPI.getSettings();
+		setSsid(ssid);
+		setPassword(password);
 	}
 
-	let ssidTemp;
-	let passwordTemp;
+	useAsync(async () => {
+		await loadWifiSettings();
+	});
 
 	async function saveValues() {
-		console.log("saveValues");
-		const settings = { ssid: ssidTemp, password: passwordTemp };
+		console.log('saveValues');
+		const settings = { ssid, password };
 		await window.electronAPI.setSettings(settings);
 	}
 
 	function inputSsid(event) {
-		ssidTemp = event.target.value;
-		console.log(ssidTemp);
+		setSsid(event.target.value);
 	}
 
 	function inputPassword(event) {
-		passwordTemp = event.target.value;
-		console.log(passwordTemp);
+		setPassword(event.target.value);
 	}
-
-	function testFunc() {
-		console.log(ssidQrcode);
-		console.log(passwordQrcode);
-	}
-
-	/*function saveValues() {
-		let valuesObject = { ssid: ssidTemp, password: passwordTemp };
-		dispatch(setHotspotValues(valuesObject));
-	}*/
 
 	return (
-		<div>
-			<h1>Ajustes del hotspot</h1>
-
-			<div className="settings-body">
-				<div className="hotspot-inputs">
-					<p>SSID:</p>
-					<input
-						id="ssid"
-						onChange={inputSsid}
-						defaultValue={ssidQrcode}
-					/>
-					<p>Password:</p>
-					<input
-						id="password"
-						onChange={inputPassword}
-						defaultValue={passwordQrcode}
-					/>
+		<div className='flex row justify-center p-2'>
+			<div className='flex column gap-2 align-items-center mt-5'>
+				<span className='font-8 font-bold font-primary-hard'>Hotspot settings</span>
+				<TextInput type="text" value={ssid} onChange={(e) => inputSsid(e)} placeholder='Enter the SSID...' />
+				<TextInput type="text" value={password} onChange={(e) => inputPassword(e)} placeholder='Enter the password...' />
+				<div className="flex row gap-2">
+					<ButtonLink style="button" onClick={saveValues}>Save</ButtonLink>
 				</div>
-				<button id="btnset" type="button" onClick={saveValues}>
-					Guardar
-				</button>
-				<button id="test" type="button" onClick={testFunc}>
-					Test
-				</button>
 			</div>
 		</div>
 	);
 }
+
+export default Settings;
