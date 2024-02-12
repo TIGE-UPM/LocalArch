@@ -45,6 +45,7 @@ In order to download the app, first the repository must be cloned. Then, inside 
 
 ## 2. Launching the app
 
-In order to launch the app after downloading the repository, you must first execute the ``npm start`` command. This command initiates the server that compiles React whenever a change is detected. Additionally, in a separate terminal, the ``npm run electron-dev`` command should be executed. This command starts the Electron app, which displays the React interface.
+In order to launch the app after downloading the repository, you must first execute the ``npm start`` command. This command initiates the server that compiles React whenever a change is detected. Additionally, in a separate terminal, the ``npm run electron-dev`` command should be executed. This command starts the Electron app, which displays the React interface. <br/><br/>
+Once the app is launched, please follow the instructions in <a href="electron/wifi/README.md">electron/wifi/README.md</a> to launch the hotspot.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
